@@ -1,0 +1,60 @@
+package com.oversketch.flutter_tiktok.service;
+
+import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.IBinder;
+
+import androidx.annotation.Nullable;
+
+import com.oversketch.flutter_tiktok.LockscreenActivity;
+
+public class PlayService extends Service {
+    ScreenBroadcastReceiver screenBroadcastReceiver;
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        screenBroadcastReceiver = new ScreenBroadcastReceiver();
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(screenBroadcastReceiver, filter);
+        System.out.println("PlayService onCreate");
+
+    }
+
+    public class ScreenBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            System.out.println("ScreenBroadcastReceiver onReceive");
+            handleCommandIntent(intent);
+        }
+    }
+
+    private void handleCommandIntent(Intent intent) {
+        final String action = intent.getAction();
+        System.out.println("handleCommandIntent onCreate");
+
+        if (Intent.ACTION_SCREEN_OFF.equals(action) ){
+            Intent lockScreen = new Intent(this, LockscreenActivity.class);
+            lockScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            System.out.println("LockscreenActivity onCreate");
+            startActivity(lockScreen);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(screenBroadcastReceiver);
+    }
+}

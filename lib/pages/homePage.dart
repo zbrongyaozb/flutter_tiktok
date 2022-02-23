@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_tiktok/mock/video.dart';
 import 'package:flutter_tiktok/pages/cameraPage.dart';
 import 'package:flutter_tiktok/pages/followPage.dart';
@@ -40,6 +41,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   List<UserVideo> videoDataList = [];
 
+  static const MethodChannel methodChannel =
+  MethodChannel('samples.flutter.io/battery');
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state != AppLifecycleState.resumed) {
@@ -56,6 +60,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    methodChannel.invokeMethod('getBatteryLevel');
     videoDataList = UserVideo.fetchVideo();
     WidgetsBinding.instance!.addObserver(this);
     _videoListController.init(
