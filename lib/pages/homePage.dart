@@ -41,8 +41,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   List<UserVideo> videoDataList = [];
 
-  static const MethodChannel methodChannel =
-  MethodChannel('samples.flutter.io/battery');
+  static const MethodChannel methodChannel = MethodChannel('samples.flutter.io/battery');
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
