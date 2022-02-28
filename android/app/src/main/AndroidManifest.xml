@@ -14,17 +14,27 @@
         android:icon="@mipmap/ic_launcher"
         android:label="flutter_tiktok">
         <activity
+            android:name=".LockActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/LockScreenTheme" />
+        <activity
             android:name=".LockscreenActivity"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true"
-            android:theme="@style/LockScreenTheme"
-            android:exported="true" />
+            android:theme="@style/LockScreenTheme" />
+
         <service
             android:name=".service.PlayService"
             android:enabled="true"
             android:exported="true" />
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

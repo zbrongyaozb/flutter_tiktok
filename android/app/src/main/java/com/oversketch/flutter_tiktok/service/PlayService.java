@@ -9,6 +9,7 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
+import com.oversketch.flutter_tiktok.LockActivity;
 import com.oversketch.flutter_tiktok.LockscreenActivity;
 
 public class PlayService extends Service {
@@ -45,7 +46,7 @@ public class PlayService extends Service {
         System.out.println("handleCommandIntent onCreate");
 
         if (Intent.ACTION_SCREEN_OFF.equals(action) ){
-            Intent lockScreen = new Intent(this, LockscreenActivity.class);
+            Intent lockScreen = new Intent(this, LockActivity.class);
             lockScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             System.out.println("LockscreenActivity onCreate");
             startActivity(lockScreen);
