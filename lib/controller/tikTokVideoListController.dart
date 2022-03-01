@@ -14,8 +14,8 @@ typedef LoadMoreVideo = Future<List<VPVideoController>> Function(
 class TikTokVideoListController extends ChangeNotifier {
   TikTokVideoListController({
     this.loadMoreCount = 1,
-    this.preloadCount = 3,
-    this.disposeCount = 5,
+    this.preloadCount = 2,
+    this.disposeCount = 2,
   });
 
   /// 到第几个触发预加载，例如：1:最后一个，2:倒数第二个
@@ -106,6 +106,7 @@ class TikTokVideoListController extends ChangeNotifier {
     _videoProvider = videoProvider;
     pageController.addListener(() {
       var p = pageController.page!;
+      print('loadIndex$p');
       if (p % 1 == 0) {
         loadIndex(p ~/ 1);
       }

@@ -41,7 +41,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   List<UserVideo> videoDataList = [];
 
-  static const MethodChannel methodChannel = MethodChannel('samples.flutter.io/battery');
+  static const MethodChannel methodChannel =
+      MethodChannel('samples.flutter.io/battery');
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -61,6 +62,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     methodChannel.invokeMethod('getBatteryLevel');
     videoDataList = UserVideo.fetchVideo();
+    // print(videoDataList);
     WidgetsBinding.instance!.addObserver(this);
     _videoListController.init(
       pageController: _pageController,
@@ -88,6 +90,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
     tkController.addListener(
       () {
+        print('tkController，${tkController.value},${TikTokPagePositon.middle}');
         if (tkController.value == TikTokPagePositon.middle) {
           _videoListController.currentPlayer.play();
         } else {

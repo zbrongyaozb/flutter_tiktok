@@ -32,6 +32,8 @@ dependencies:
   # 播放器
   video_player: ^2.2.19
 
+  rxdart: ^0.27.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

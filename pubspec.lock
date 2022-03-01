@@ -121,6 +121,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.8.0"
+  rxdart:
+    dependency: "direct main"
+    description:
+      name: rxdart
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.27.3"
   safemap:
     dependency: "direct main"
     description:
