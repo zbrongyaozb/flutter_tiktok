@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_tiktok/mock/video.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:rxdart/rxdart.dart';
 
 typedef LoadMoreVideo = Future<List<VPVideoController>> Function(
   int index,
@@ -29,6 +30,7 @@ class TikTokVideoListController extends ChangeNotifier {
 
   /// 提供视频的builder
   LoadMoreVideo? _videoProvider;
+  final page$ = PublishSubject<int>();
 
   loadIndex(int target, {bool reload = false}) {
     if (!reload) {
@@ -102,14 +104,14 @@ class TikTokVideoListController extends ChangeNotifier {
     required List<VPVideoController> initialList,
     required LoadMoreVideo videoProvider,
   }) async {
+    page$.stream.distinct().listen((p) {
+      print('listen $p');
+      loadIndex(p);
+    });
     playerList.addAll(initialList);
     _videoProvider = videoProvider;
     pageController.addListener(() {
-      var p = pageController.page!;
-      print('loadIndex$p');
-      if (p % 1 == 0) {
-        loadIndex(p ~/ 1);
-      }
+      page$.add((pageController.page!) ~/ 1);
     });
     loadIndex(0, reload: true);
     notifyListeners();
@@ -132,6 +134,7 @@ class TikTokVideoListController extends ChangeNotifier {
       player.dispose();
     }
     playerList = [];
+    page$.close();
     super.dispose();
   }
 }

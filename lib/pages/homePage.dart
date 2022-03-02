@@ -236,6 +236,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 ),
                 onSingleTap: () async {
                   if (player.controller.value.isPlaying) {
+                    print('onSingleTap pause');
                     await player.pause();
                   } else {
                     await player.play();
