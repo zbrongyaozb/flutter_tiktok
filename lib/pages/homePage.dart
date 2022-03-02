@@ -41,9 +41,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   List<UserVideo> videoDataList = [];
 
-  static const MethodChannel methodChannel =
-      MethodChannel('samples.flutter.io/battery');
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state != AppLifecycleState.resumed) {
@@ -58,9 +55,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
+// static const MethodChannel methodChannel =
+//       MethodChannel('samples.flutter.io/battery');
   @override
   void initState() {
-    methodChannel.invokeMethod('getBatteryLevel');
+    // methodChannel.invokeMethod('getBatteryLevel');
     videoDataList = UserVideo.fetchVideo();
     // print(videoDataList);
     WidgetsBinding.instance!.addObserver(this);
@@ -86,6 +85,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       },
     );
     _videoListController.addListener(() {
+      // print('_videoListController.addListener');
       setState(() {});
     });
     tkController.addListener(
@@ -239,6 +239,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     print('onSingleTap pause');
                     await player.pause();
                   } else {
+                    print('onSingleTap play');
                     await player.play();
                   }
                   setState(() {});

@@ -58,9 +58,10 @@ class TikTokVideoListController extends ChangeNotifier {
       // 需要释放[disposeCount]之前的视频
       if (i < newIndex - disposeCount || i > newIndex + disposeCount) {
         print('释放$i');
-        playerOfIndex(i)?.controller.removeListener(_didUpdateValue);
-        playerOfIndex(i)?.showPauseIcon.removeListener(_didUpdateValue);
-        playerOfIndex(i)?.dispose();
+        playerOfIndex(i)
+          ?..controller.removeListener(_didUpdateValue)
+          ..showPauseIcon.removeListener(_didUpdateValue)
+          ..dispose();
       } else {
         // 需要预加载
         if (i > newIndex && i < newIndex + preloadCount) {
@@ -84,6 +85,7 @@ class TikTokVideoListController extends ChangeNotifier {
   }
 
   _didUpdateValue() {
+    // print('_didUpdateValue.notifyListeners');
     notifyListeners();
   }
 
@@ -110,9 +112,11 @@ class TikTokVideoListController extends ChangeNotifier {
     });
     playerList.addAll(initialList);
     _videoProvider = videoProvider;
+
     pageController.addListener(() {
       page$.add((pageController.page!) ~/ 1);
     });
+
     loadIndex(0, reload: true);
     notifyListeners();
   }
