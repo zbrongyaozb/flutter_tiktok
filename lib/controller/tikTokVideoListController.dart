@@ -15,8 +15,8 @@ typedef LoadMoreVideo = Future<List<VPVideoController>> Function(
 class TikTokVideoListController extends ChangeNotifier {
   TikTokVideoListController({
     this.loadMoreCount = 1,
-    this.preloadCount = 2,
-    this.disposeCount = 2,
+    this.preloadCount = 5,
+    this.disposeCount = 3,
   });
 
   /// 到第几个触发预加载，例如：1:最后一个，2:倒数第二个
@@ -49,7 +49,7 @@ class TikTokVideoListController extends ChangeNotifier {
       print('暂停$oldIndex');
     }
     // 开始播放当前的视频
-    playerOfIndex(newIndex)?.controller.addListener(_didUpdateValue);
+    playerOfIndex(newIndex)?.controller.addListener(() => {});
     playerOfIndex(newIndex)?.showPauseIcon.addListener(_didUpdateValue);
     playerOfIndex(newIndex)?.play();
     print('播放$newIndex');
@@ -57,7 +57,7 @@ class TikTokVideoListController extends ChangeNotifier {
     for (var i = 0; i < playerList.length; i++) {
       // 需要释放[disposeCount]之前的视频
       if (i < newIndex - disposeCount || i > newIndex + disposeCount) {
-        print('释放$i');
+        // print('释放$i');
         playerOfIndex(i)
           ?..controller.removeListener(_didUpdateValue)
           ..showPauseIcon.removeListener(_didUpdateValue)
@@ -218,15 +218,24 @@ class VPVideoController extends TikTokVideoController<VideoPlayerController> {
     ControllerSetter<VideoPlayerController>? afterInit,
   }) async {
     if (prepared) return;
+    var date = DateTime.now().millisecondsSinceEpoch;
     await Future.wait(_actLocks);
+    // print('预加载1 ${DateTime.now().millisecondsSinceEpoch - date}');
+
     _actLocks.clear();
     var completer = Completer<void>();
     _actLocks.add(completer.future);
+    // print('预加载1.5 ${DateTime.now().millisecondsSinceEpoch - date}');
     await this.controller.initialize();
+    // print('预加载2 ${DateTime.now().millisecondsSinceEpoch - date}');
     await this.controller.setLooping(true);
+    // print('预加载3 ${DateTime.now().millisecondsSinceEpoch - date}');
     afterInit ??= this._afterInit;
     await afterInit?.call(this.controller);
     _prepared = true;
+    // print('预加载end${this.controller.value}');
+    print(
+        '预加载end ${DateTime.now().millisecondsSinceEpoch - date} ${this.videoInfo}');
     completer.complete();
     if (_disposeLock != null) {
       _disposeLock?.complete();

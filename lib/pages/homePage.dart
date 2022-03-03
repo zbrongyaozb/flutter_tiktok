@@ -216,6 +216,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 onShare: () {},
               );
               // video
+              // print('player controller${player.controller.value}');
+              // print('player videoInfo ${player.videoInfo}');
+              print(
+                  'player.aspectRatio $i, ${player.controller.value.aspectRatio}  ${player.videoInfo}');
               Widget currentVideo = Center(
                 child: AspectRatio(
                   aspectRatio: player.controller.value.aspectRatio,
