@@ -14,9 +14,9 @@ typedef LoadMoreVideo = Future<List<VPVideoController>> Function(
 /// 提供了预加载/释放/加载更多功能
 class TikTokVideoListController extends ChangeNotifier {
   TikTokVideoListController({
-    this.loadMoreCount = 1,
+    this.loadMoreCount = 5,
     this.preloadCount = 5,
-    this.disposeCount = 3,
+    this.disposeCount = 5,
   });
 
   /// 到第几个触发预加载，例如：1:最后一个，2:倒数第二个
@@ -64,7 +64,7 @@ class TikTokVideoListController extends ChangeNotifier {
           ..dispose();
       } else {
         // 需要预加载
-        if (i > newIndex && i < newIndex + preloadCount) {
+        if (i > newIndex && i <= newIndex + preloadCount) {
           print('预加载$i');
           playerOfIndex(i)?.init();
         }
@@ -126,6 +126,9 @@ class TikTokVideoListController extends ChangeNotifier {
 
   /// 视频列表
   List<VPVideoController> playerList = [];
+
+  /// 视频列表
+  List<VPVideoController> loadedPlayerList = [];
 
   ///
   VPVideoController get currentPlayer => playerList[index.value];
@@ -235,7 +238,7 @@ class VPVideoController extends TikTokVideoController<VideoPlayerController> {
     _prepared = true;
     // print('预加载end${this.controller.value}');
     print(
-        '预加载end ${DateTime.now().millisecondsSinceEpoch - date} ${this.videoInfo}');
+        '预加载end ${this.videoInfo?.url.substring(this.videoInfo!.url.length - 5)} ${this.controller.value}');
     completer.complete();
     if (_disposeLock != null) {
       _disposeLock?.complete();

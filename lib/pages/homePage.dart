@@ -219,7 +219,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               // print('player controller${player.controller.value}');
               // print('player videoInfo ${player.videoInfo}');
               print(
-                  'player.aspectRatio $i, ${player.controller.value.aspectRatio}  ${player.videoInfo}');
+                  'player.aspectRatio $i, ${player.controller.value.aspectRatio}  ${player.videoInfo?.url}');
+              // for (var i = 0; i < _videoListController.playerList.length; i++) {
+              //   var test = _videoListController.playerOfIndex(i)!;
+              //   print(
+              //       'aspectRatio $i, ${test.controller.value.aspectRatio}  ${test.videoInfo?.url}');
+              // }
               Widget currentVideo = Center(
                 child: AspectRatio(
                   aspectRatio: player.controller.value.aspectRatio,
