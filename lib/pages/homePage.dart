@@ -55,11 +55,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
-// static const MethodChannel methodChannel =
-//       MethodChannel('samples.flutter.io/battery');
+static const MethodChannel methodChannel =
+      MethodChannel('samples.flutter.io/battery');
   @override
   void initState() {
-    // methodChannel.invokeMethod('getBatteryLevel');
+    methodChannel.invokeMethod('getBatteryLevel');
     videoDataList = UserVideo.fetchVideo();
     // print(videoDataList);
     WidgetsBinding.instance!.addObserver(this);
@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             itemCount: _videoListController.videoCount,
             itemBuilder: (context, i) {
               // 拼一个视频组件出来
-              bool isF = SafeMap(favoriteMap)[i].boolean ?? false;
+              bool isF = SafeMap(favoriteMap)[i].boolean;
               var player = _videoListController.playerOfIndex(i)!;
               var data = player.videoInfo!;
               // 右侧按钮列
