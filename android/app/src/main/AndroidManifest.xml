@@ -3,6 +3,7 @@
     package="com.oversketch.flutter_tiktok">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -13,6 +14,21 @@
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="flutter_tiktok">
+        <receiver
+            android:name=".service.BootBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+
+                <!-- 注册开机广播地址 -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".LockActivity"
             android:excludeFromRecents="true"
@@ -34,6 +50,14 @@
             android:name=".service.PlayService"
             android:enabled="true"
             android:exported="true" />
+        <service
+            android:name=".service.JobSchedulerService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".service.UseJobService"
+            android:process=":useJobService" />
 
         <activity
             android:name=".MainActivity"

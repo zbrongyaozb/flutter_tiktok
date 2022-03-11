@@ -4,42 +4,33 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.content.BroadcastReceiver;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
-import com.oversketch.flutter_tiktok.LockActivity;
-import com.oversketch.flutter_tiktok.LockscreenActivity;
+public class UseJobService extends Service {
 
-public class PlayService extends Service {
-    ScreenBroadcastReceiver screenBroadcastReceiver;
     private static final String CHANNEL_ID = "com.example.keep.alive";
     private static final String CHANNEL_NAME = "Keep Alive Service";
-    private static final String TAG = "keep-alive";
+    public static final int NOTICE_ID = 100;
+    private static final String TAG = UseJobService.class.getSimpleName();
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate() {
         super.onCreate();
-        screenBroadcastReceiver = new ScreenBroadcastReceiver();
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(screenBroadcastReceiver, filter);
-        System.out.println("PlayService onCreate");
+        useJobServiceForKeepAlive();
         startForeground();
-
     }
     private void startForeground() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -75,30 +66,51 @@ public class PlayService extends Service {
 
     }
 
-    public class ScreenBroadcastReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            System.out.println("ScreenBroadcastReceiver onReceive");
-            handleCommandIntent(intent);
-        }
-    }
-
-    private void handleCommandIntent(Intent intent) {
-        final String action = intent.getAction();
-        System.out.println("handleCommandIntent onCreate");
-
-        if (Intent.ACTION_SCREEN_OFF.equals(action) ){
-            Intent lockScreen = new Intent(this, LockActivity.class);
-            lockScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            System.out.println("LockscreenActivity onCreate");
-            startActivity(lockScreen);
-        }
-    }
-
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(screenBroadcastReceiver);
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    /**
+     * 使用JobScheduler进行保活
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void useJobServiceForKeepAlive() {
+        Log.e(TAG, "使用JobScheduler进行保活");
+
+        Intent bootIntent = new Intent(getApplicationContext(), PlayService.class);
+//            bootIntent.addFlags()
+//            context.startService(bootIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.e(TAG, "使用JobScheduler进行保活 startForegroundService");
+            getApplicationContext().startForegroundService(bootIntent);
+        } else {
+            getApplicationContext().startService(bootIntent);
+        }
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        if (jobScheduler == null) {
+            return;
+        }
+        jobScheduler.cancelAll();
+        JobInfo.Builder builder =
+                new JobInfo.Builder(1024, new ComponentName(getPackageName(),
+                        JobSchedulerService.class.getName()));
+        //周期设置为了2s
+        builder.setPeriodic(1000 * 2);
+        builder.setPersisted(true);
+        builder.setBackoffCriteria(10, JobInfo.BACKOFF_POLICY_LINEAR);
+        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
+        int schedule = jobScheduler.schedule(builder.build());
+
+        Log.e(TAG, "使用JobScheduler进行保活 schedule"+schedule);
+        if (schedule <= 0) {
+            Log.e(TAG, "schedule error！");
+        }
     }
 }

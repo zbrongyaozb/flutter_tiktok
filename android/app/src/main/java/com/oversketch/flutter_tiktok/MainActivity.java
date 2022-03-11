@@ -11,6 +11,7 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 
 import com.oversketch.flutter_tiktok.service.PlayService;
+import com.oversketch.flutter_tiktok.service.UseJobService;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -27,7 +28,8 @@ public class MainActivity extends FlutterActivity {
                 new MethodChannel.MethodCallHandler() {
                     @Override
                     public void onMethodCall(MethodCall call, MethodChannel.Result result) {
-                        lock();
+//                        lock();
+                        useJobService();
                         result.success(1);
                     }
                 }
@@ -35,8 +37,14 @@ public class MainActivity extends FlutterActivity {
     }
 
     private void lock() {
+        System.out.println("lock");
         Intent intent = new Intent(this,  PlayService.class);
         startService(intent);
 
+    }
+    private void useJobService() {
+        System.out.println("useJobService");
+        Intent intentJob = new Intent(this, UseJobService.class);
+        startService(intentJob);
     }
 }
