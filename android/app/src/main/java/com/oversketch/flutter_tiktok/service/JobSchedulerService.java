@@ -14,10 +14,11 @@ public class JobSchedulerService extends JobService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "使用JobScheduler进行保活 Service created");
+        Log.e(TAG, "使用JobScheduler进行保活 Service created");
     }
     @Override
     public boolean onStartJob(JobParameters params) {
+        Log.e(TAG, "使用JobScheduler进行保活 Service onStartJob");
         return false;
     }
 

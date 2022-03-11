@@ -102,9 +102,9 @@ public class UseJobService extends Service {
                 new JobInfo.Builder(1024, new ComponentName(getPackageName(),
                         JobSchedulerService.class.getName()));
         //周期设置为了2s
-        builder.setPeriodic(1000 * 2);
+        builder.setPeriodic(5000 * 2);
         builder.setPersisted(true);
-        builder.setBackoffCriteria(10, JobInfo.BACKOFF_POLICY_LINEAR);
+//        builder.setBackoffCriteria(10, JobInfo.BACKOFF_POLICY_LINEAR);
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
         int schedule = jobScheduler.schedule(builder.build());
 
