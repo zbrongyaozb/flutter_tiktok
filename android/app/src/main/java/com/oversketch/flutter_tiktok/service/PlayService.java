@@ -1,5 +1,6 @@
 package com.oversketch.flutter_tiktok.service;
 
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -37,7 +38,10 @@ public class PlayService extends Service {
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(screenBroadcastReceiver, filter);
-        Log.e(TAG, "doWork PlayService onCreate");
+        Log.e(TAG, "doWork PlayService onCreate "+isLockScreenOn());
+        if(isLockScreenOn()){
+            creatLockActivity();
+        }
         startForeground();
 
     }
@@ -89,17 +93,28 @@ public class PlayService extends Service {
         final String action = intent.getAction();
         Log.e(TAG, "doWork handleCommandIntent onCreate");
 
-        if (Intent.ACTION_SCREEN_OFF.equals(action) ){
+        if (Intent.ACTION_SCREEN_OFF.equals(action)){
+            creatLockActivity();
+        }
+    }
+    private void creatLockActivity() {
             Intent lockScreen = new Intent(this, LockActivity.class);
             lockScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Log.e(TAG, "doWork LockscreenActivity onCreate");
             startActivity(lockScreen);
-        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(screenBroadcastReceiver);
+    }
+    public boolean isLockScreenOn() {
+        KeyguardManager mKeyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+        if (mKeyguardManager.inKeyguardRestrictedInputMode()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
