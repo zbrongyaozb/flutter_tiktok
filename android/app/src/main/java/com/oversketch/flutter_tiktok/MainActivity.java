@@ -9,9 +9,17 @@ import android.os.BatteryManager;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.oversketch.flutter_tiktok.service.PlayService;
 import com.oversketch.flutter_tiktok.service.UseJobService;
+import com.oversketch.flutter_tiktok.work.CleanUpWorker;
+import com.oversketch.flutter_tiktok.work.DelayWorker;
+
+import java.util.concurrent.TimeUnit;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -29,7 +37,8 @@ public class MainActivity extends FlutterActivity {
                     @Override
                     public void onMethodCall(MethodCall call, MethodChannel.Result result) {
 //                        lock();
-                        useJobService();
+//                        useJobService();
+                        worker();
                         result.success(1);
                     }
                 }
@@ -40,6 +49,23 @@ public class MainActivity extends FlutterActivity {
         System.out.println("lock");
         Intent intent = new Intent(this,  PlayService.class);
         startService(intent);
+
+    }
+    private void worker(){
+        PeriodicWorkRequest saveRequest =
+                new PeriodicWorkRequest.Builder(CleanUpWorker.class, 15, TimeUnit.SECONDS) //工作的运行时间间隔定为一小时
+                        // Constraints
+                        .build();
+        WorkRequest uploadWorkRequest = OneTimeWorkRequest.from(CleanUpWorker.class);
+
+        WorkRequest myWorkRequest =
+                        new OneTimeWorkRequest.Builder(DelayWorker.class)
+                         .setInitialDelay(30, TimeUnit.SECONDS)
+                         .build();
+
+        WorkManager
+                .getInstance(this)
+                .enqueue(myWorkRequest);
 
     }
     private void useJobService() {
