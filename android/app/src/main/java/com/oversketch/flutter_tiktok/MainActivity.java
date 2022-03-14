@@ -9,6 +9,7 @@ import android.os.BatteryManager;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -18,6 +19,9 @@ import com.oversketch.flutter_tiktok.service.PlayService;
 import com.oversketch.flutter_tiktok.service.UseJobService;
 import com.oversketch.flutter_tiktok.work.CleanUpWorker;
 import com.oversketch.flutter_tiktok.work.DelayWorker;
+import com.oversketch.flutter_tiktok.work.DelayWorker2;
+import com.oversketch.flutter_tiktok.work.DelayWorker3;
+import com.oversketch.flutter_tiktok.work.DelayWorker4;
 
 import java.util.concurrent.TimeUnit;
 
@@ -52,20 +56,42 @@ public class MainActivity extends FlutterActivity {
 
     }
     private void worker(){
+        WorkRequest delayWorker1 =
+                        new OneTimeWorkRequest.Builder(DelayWorker.class)
+                         .setInitialDelay(2, TimeUnit.MINUTES)
+                         .build();
+        WorkRequest delayWorker2 =
+                new OneTimeWorkRequest.Builder(DelayWorker2.class)
+                        .setInitialDelay(4, TimeUnit.MINUTES)
+                        .build();
+        WorkRequest delayWorker3 =
+                new OneTimeWorkRequest.Builder(DelayWorker3.class)
+                        .setInitialDelay(6, TimeUnit.MINUTES)
+                        .build();
+        WorkRequest delayWorker4 =
+                new OneTimeWorkRequest.Builder(DelayWorker4.class)
+                        .setInitialDelay(8, TimeUnit.MINUTES)
+                        .build();
+        WorkManager
+                .getInstance(this)
+                .enqueue(delayWorker1);
+        WorkManager
+                .getInstance(this)
+                .enqueue(delayWorker2);
+        WorkManager
+                .getInstance(this)
+                .enqueue(delayWorker3);
+        WorkManager
+                .getInstance(this)
+                .enqueue(delayWorker4);
+
         PeriodicWorkRequest saveRequest =
                 new PeriodicWorkRequest.Builder(CleanUpWorker.class, 15, TimeUnit.SECONDS) //工作的运行时间间隔定为一小时
                         // Constraints
                         .build();
-        WorkRequest uploadWorkRequest = OneTimeWorkRequest.from(CleanUpWorker.class);
-
-        WorkRequest myWorkRequest =
-                        new OneTimeWorkRequest.Builder(DelayWorker.class)
-                         .setInitialDelay(30, TimeUnit.SECONDS)
-                         .build();
-
         WorkManager
                 .getInstance(this)
-                .enqueue(myWorkRequest);
+                .enqueue(saveRequest);
 
     }
     private void useJobService() {

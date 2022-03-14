@@ -14,7 +14,7 @@ class CleanUpWorker(context: Context, workerParams: WorkerParameters) : Worker(c
         Log.e("CleanUpWorker", "doWork: " )
         val bootIntent = Intent(applicationContext, PlayService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.e("doWork", "使用JobScheduler进行保活 startForegroundService")
+            Log.e("doWork", "开启锁屏服务 startForegroundService")
             applicationContext.startForegroundService(bootIntent)
         } else {
             applicationContext.startService(bootIntent)

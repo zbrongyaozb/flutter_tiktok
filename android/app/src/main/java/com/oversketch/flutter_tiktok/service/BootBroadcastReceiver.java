@@ -20,15 +20,16 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
 //            Intent bootIntent = new Intent(context, MainActivity.class);
 //            bootIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            context.startActivity(bootIntent);
-            Intent bootIntent = new Intent(context, UseJobService.class);
-//            Intent bootIntent = new Intent(context, PlayService.class);
-//            bootIntent.addFlags()
-//            context.startService(bootIntent);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(bootIntent);
-            } else {
-                context.startService(bootIntent);
-            }
+
+//            Intent bootIntent = new Intent(context, UseJobService.class);
+////            Intent bootIntent = new Intent(context, PlayService.class);
+////            bootIntent.addFlags()
+////            context.startService(bootIntent);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                context.startForegroundService(bootIntent);
+//            } else {
+//                context.startService(bootIntent);
+//            }
         }
     }
 }

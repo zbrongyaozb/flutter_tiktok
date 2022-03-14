@@ -37,7 +37,7 @@ public class PlayService extends Service {
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(screenBroadcastReceiver, filter);
-        System.out.println("PlayService onCreate");
+        Log.e(TAG, "doWork PlayService onCreate");
         startForeground();
 
     }
@@ -47,7 +47,7 @@ public class PlayService extends Service {
                     CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             if (manager == null) {
-                Log.e(TAG, "getSystemService for NotificationManager failed.");
+                Log.e(TAG, "doWork getSystemService for NotificationManager failed.");
                 return;
             }
 
@@ -79,19 +79,20 @@ public class PlayService extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            System.out.println("ScreenBroadcastReceiver onReceive");
+            System.out.println("");
+            Log.e(TAG, "doWork ScreenBroadcastReceiver onReceive");
             handleCommandIntent(intent);
         }
     }
 
     private void handleCommandIntent(Intent intent) {
         final String action = intent.getAction();
-        System.out.println("handleCommandIntent onCreate");
+        Log.e(TAG, "doWork handleCommandIntent onCreate");
 
         if (Intent.ACTION_SCREEN_OFF.equals(action) ){
             Intent lockScreen = new Intent(this, LockActivity.class);
             lockScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            System.out.println("LockscreenActivity onCreate");
+            Log.e(TAG, "doWork LockscreenActivity onCreate");
             startActivity(lockScreen);
         }
     }

@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.work.*
 import java.util.concurrent.TimeUnit
 
-class DelayWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+class DelayWorker3(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     override fun doWork(): Result {
         Log.e("开启延时worker DelayWorker", "doWork: " )
@@ -22,7 +22,7 @@ class DelayWorker(context: Context, workerParams: WorkerParameters) : Worker(con
         WorkManager
             .getInstance(applicationContext)
             .enqueueUniquePeriodicWork(
-                "worker1",
+                "worker3",
                 ExistingPeriodicWorkPolicy.REPLACE,
                 saveRequest);
     }
