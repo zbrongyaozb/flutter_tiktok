@@ -58,19 +58,19 @@ public class MainActivity extends FlutterActivity {
     private void worker(){
         WorkRequest delayWorker1 =
                         new OneTimeWorkRequest.Builder(DelayWorker.class)
-                         .setInitialDelay(2, TimeUnit.MINUTES)
+                         .setInitialDelay(3, TimeUnit.MINUTES)
                          .build();
         WorkRequest delayWorker2 =
                 new OneTimeWorkRequest.Builder(DelayWorker2.class)
-                        .setInitialDelay(4, TimeUnit.MINUTES)
+                        .setInitialDelay(6, TimeUnit.MINUTES)
                         .build();
         WorkRequest delayWorker3 =
                 new OneTimeWorkRequest.Builder(DelayWorker3.class)
-                        .setInitialDelay(6, TimeUnit.MINUTES)
+                        .setInitialDelay(9, TimeUnit.MINUTES)
                         .build();
         WorkRequest delayWorker4 =
                 new OneTimeWorkRequest.Builder(DelayWorker4.class)
-                        .setInitialDelay(8, TimeUnit.MINUTES)
+                        .setInitialDelay(12, TimeUnit.MINUTES)
                         .build();
         WorkManager
                 .getInstance(this)
